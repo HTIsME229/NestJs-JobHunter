@@ -22,12 +22,12 @@ export class CompaniesController {
   @Get()
   @Message("fetch Company success")
   findAll(
-    @Query("page") currentPage: number,
-    @Query("limit") limit: number,
+    @Query("current") current: number,
+    @Query("pageSize") pageSize: number,
     @Req() req) {
 
 
-    return this.companiesService.findAll(limit, currentPage, req.query);
+    return this.companiesService.findAll(pageSize, current, req.query);
   }
 
   @Get(':id')

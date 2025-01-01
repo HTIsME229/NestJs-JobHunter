@@ -26,8 +26,8 @@ export class UsersController {
   @Get()
   @Message("fetch Company success")
   findAll(
-    @Query("page") currentPage: number,
-    @Query("limit") limit: number,
+    @Query("current") currentPage: number,
+    @Query("pageSize") limit: number,
     @Req() req) {
 
 

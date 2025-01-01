@@ -12,6 +12,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
 
     canActivate(context: ExecutionContext) {
+        const request = context.switchToHttp().getRequest();
         const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
             context.getHandler(),
             context.getClass(),
@@ -22,10 +23,13 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         return super.canActivate(context);
 
     }
+
     handleRequest(err, user, info) {
         // You can throw an exception based on either "info" or "err" arguments
         if (err || !user) {
             throw err || new UnauthorizedException("Token không hợp lệ");
+
+
         }
         return user;
     }

@@ -8,15 +8,17 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './Passport/jwt.strategy';
 import { AuThController } from './auth.controller';
+const ms = require('ms');
+
 
 @Module({
 
     imports: [UsersModule, PassportModule, JwtModule.registerAsync({
         useFactory: (config: ConfigService) => {
             return {
-                secret: config.get<string>('JWT_SECRET_KEY'),
+                secret: config.get<string>('JWT_ACCESS_TOKEN_SECRET_KEY'),
                 signOptions: {
-                    expiresIn: config.get<string | number>('JWT_EXPIRATION_TIME'),
+                    expiresIn: ms(config.get<string>('JWT_ACCESS_TOKEN_EXPIRATION_TIME')) / 1000,
                 },
             };
         },

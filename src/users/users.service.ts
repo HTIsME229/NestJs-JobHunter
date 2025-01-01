@@ -47,8 +47,8 @@ export class UsersService {
 
   async findAll(limit: number, currentPage: number, qs: string) {
     const { filter, sort, projection, population } = aqp(qs);
-    delete filter.page;
-    delete filter.limit
+    delete filter.current;
+    delete filter.pageSize
     let defaultLimit = +limit ? +limit : 10;
     const skip = (currentPage - 1) * defaultLimit
     console.log(filter)
@@ -92,6 +92,9 @@ export class UsersService {
     }
 
   }
+  async updateRefreshToken(id: string, refreshToken: string) {
+    return this.userModel.updateOne({ _id: id }, { refreshToken: refreshToken })
+  }
   checkUserPassword(password: string, hashPassword: string) {
     return bcrypt.compareSync(password, hashPassword);
   }
@@ -102,5 +105,14 @@ export class UsersService {
 
   remove(id: string) {
     return this.userModel.softDelete({ _id: id });
+  }
+
+  async findByRefreshToken(token: string) {
+    return await this.userModel.findOne({ refreshToken: token }).select("-password");
+  }
+  async updateRefreshTokenLogout(user: IUser) {
+    await this.userModel.updateOne({
+      email: user.email
+    }, { refreshToken: null })
   }
 }
